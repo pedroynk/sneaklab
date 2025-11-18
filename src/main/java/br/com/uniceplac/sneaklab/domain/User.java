@@ -1,32 +1,36 @@
-package br.com.uniceplac.sneaklab.models;
+package br.com.uniceplac.sneaklab.domain;
 
-import jakarta.persistence.*;
+
 import java.time.Instant;
 
-@Entity
-@Table(name = "users", uniqueConstraints = {
-        @UniqueConstraint(name = "uk_users_email", columnNames = "email")
-})
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private long id;
 
-    @Column(nullable = false, length = 120)
     private String name;
 
-    @Column(nullable = false, length = 160)
     private String email;
 
-    @Column(nullable = false)
     private String passwordHash;
 
-    @Column(nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
 
-    @Column(nullable = false, updatable = false)
     private Instant updatedAt = Instant.now();
 
+    //Construtores
+    public User() {
+    }
+
+    public User(String name, long id, String email, String passwordHash, Instant createdAt, Instant updatedAt) {
+        this.name = name;
+        this.id = id;
+        this.email = email;
+        this.passwordHash = passwordHash;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    //Getters e Setters
     public long getId() {
         return id;
     }
@@ -74,5 +78,4 @@ public class User {
     public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
     }
-
 }
