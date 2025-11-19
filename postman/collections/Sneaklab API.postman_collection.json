@@ -1,0 +1,845 @@
+{
+  "info": {
+    "_postman_id": "6e4cf270-0553-4e58-8b0f-605e844c73cf",
+    "name": "Sneaklab API",
+    "description": "Coleção para testar o fluxo de pagamentos da API Sneaklab (Pagamentos + impacto em Pedido).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "47437837",
+    "_collection_link": "https://leonardors3052-7381515.postman.co/workspace/23ac03d3-d2c8-4cdb-8783-ab85198cf8cd/collection/47437837-6e4cf270-0553-4e58-8b0f-605e844c73cf?action=share&source=collection_link&creator=47437837"
+  },
+  "item": [
+    {
+      "name": "Pagamentos",
+      "item": [
+        {
+          "name": "1 - Criar Pagamento (PENDENTE)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code é 201 (Created)\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "var json = pm.response.json();",
+                  "pm.environment.set(\"pagamentoId\", json.id);",
+                  "console.log(\"pagamentoId salvo:\", json.id);",
+                  "",
+                  "pm.test(\"Status inicial do pagamento é PENDENTE\", function () {",
+                  "    pm.expect(json.status).to.eql(\"PENDENTE\");",
+                  "});"
+                ],
+                "id": "d3ce2cda-7126-4c35-95e1-6b1e6fb9c1a7"
+              }
+            }
+          ],
+          "id": "920540d7-8dcd-43e7-b060-4c35b8f9ab2c",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idPedido\": {{pedidoId}},\n  \"valor\": 799.80,\n  \"tipoPagamento\": \"CARTAO\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/pagamentos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pagamentos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2 - Buscar Pagamento por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code é 200 (OK)\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var json = pm.response.json();",
+                  "pm.test(\"ID do pagamento bate com o environment\", function () {",
+                  "    pm.expect(json.id).to.eql(parseInt(pm.environment.get(\"pagamentoId\")));",
+                  "});"
+                ],
+                "id": "fb4ff35d-9f4d-40d0-9077-625b32aec21c"
+              }
+            }
+          ],
+          "id": "bd0f44cb-d589-4466-984f-1fb8820a8150",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/pagamentos/{{pagamentoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pagamentos",
+                "{{pagamentoId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3 - Listar Pagamentos por Pedido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code é 200 (OK)\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var lista = pm.response.json();",
+                  "pm.test(\"Retornou um array\", function () {",
+                  "    pm.expect(lista).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test(\"Existe pelo menos um pagamento para o pedido\", function () {",
+                  "    pm.expect(lista.length).to.be.above(0);",
+                  "});"
+                ],
+                "id": "d82e12ce-b6a2-4846-a19a-71f7a1bd22b7"
+              }
+            }
+          ],
+          "id": "778b1e87-10ae-408b-8066-2e23b6fb1ce0",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/pagamentos?pedidoId={{pedidoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pagamentos"
+              ],
+              "query": [
+                {
+                  "key": "pedidoId",
+                  "value": "{{pedidoId}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4 - Aprovar Pagamento",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code é 200 (OK)\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var json = pm.response.json();",
+                  "pm.test(\"Status do pagamento é APROVADO\", function () {",
+                  "    pm.expect(json.status).to.eql(\"APROVADO\");",
+                  "});"
+                ],
+                "id": "808557c7-bc07-48e1-8063-f556325142f2"
+              }
+            }
+          ],
+          "id": "680f2977-198c-4127-98b9-d4042f7dfd05",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/pagamentos/{{pagamentoId}}/aprovar",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pagamentos",
+                "{{pagamentoId}}",
+                "aprovar"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5 - Consultar Pedido após Pagamento",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code é 200 (OK)\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test(\"Status do pedido é PAGO após aprovação do pagamento\", function () {",
+                  "    pm.expect(json.status).to.eql(\"PAGO\");",
+                  "});"
+                ],
+                "id": "0f27418b-c436-4f77-abb5-d7476bd76952"
+              }
+            }
+          ],
+          "id": "6c97a956-108a-4237-b13e-2b00df6f6183",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/pedidos/{{pedidoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pedidos",
+                "{{pedidoId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "6 - Estornar Pagamento (opcional)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code é 200 (OK)\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var json = pm.response.json();",
+                  "pm.test(\"Status do pagamento é ESTORNADO\", function () {",
+                  "    pm.expect(json.status).to.eql(\"ESTORNADO\");",
+                  "});"
+                ],
+                "id": "e0ef1e99-1800-4fc3-ac75-9316e659b205"
+              }
+            }
+          ],
+          "id": "990d0d42-8d92-4d25-bc89-454b09f5e69c",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/pagamentos/{{pagamentoId}}/estornar",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pagamentos",
+                "{{pagamentoId}}",
+                "estornar"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "15573edc-19ca-4cc3-928b-98d79ed917e3"
+    },
+    {
+      "name": "Produtos e Pedidos",
+      "item": [
+        {
+          "name": "9 - Excluir produto",
+          "id": "1b0fe180-bbfb-44fb-b214-519b3fc9d1d6",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/produtos/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "produtos",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "1 - Criar Produto",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code é 201 (Created)\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "var json = pm.response.json();",
+                  "pm.environment.set(\"produtoId\", json.id);",
+                  "console.log(\"produtoId salvo:\", json.id);"
+                ],
+                "id": "daffaf87-a048-49da-8ddb-8c2042c493f2"
+              }
+            }
+          ],
+          "id": "e96e3875-dd11-49cb-a98e-0b7cf966fd44",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Tênis SneakLab Air\",\n  \"sku\": \"SNK-AIR-001\",\n  \"preco\": 399.90,\n  \"estoque\": 50\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/produtos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "produtos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2 - Listar Produtos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code é 200 (OK)\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var lista = pm.response.json();",
+                  "pm.test(\"Retornou pelo menos 1 produto\", function () {",
+                  "    pm.expect(lista.length).to.be.above(0);",
+                  "});"
+                ],
+                "id": "75f89913-6808-458e-a2f5-9cde9e9a3ace"
+              }
+            }
+          ],
+          "id": "d4cfbb31-0e74-4d35-82f2-33288075882d",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/produtos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "produtos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "10 - Atualizar produto",
+          "id": "a86cc371-658e-4aa3-81f1-8e54423a0e08",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Tênis Sneaker XYZ (Atualizado)\",\n  \"descricao\": \"Tênis de corrida atualizado\",\n  \"preco\": 219.9,\n  \"estoque\": 8\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/produtos/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "produtos",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3 - Criar Pedido (RASCUNHO)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code é 201 (Created)\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "var json = pm.response.json();",
+                  "pm.environment.set(\"pedidoId\", json.id);",
+                  "",
+                  "pm.test(\"Status inicial é RASCUNHO\", function () {",
+                  "    pm.expect(json.status).to.eql(\"RASCUNHO\");",
+                  "});",
+                  "",
+                  "console.log(\"pedidoId salvo:\", json.id);"
+                ],
+                "id": "da4a2014-327b-4759-826a-dd3df15934be"
+              }
+            }
+          ],
+          "id": "19adcd53-663a-4a20-8717-5d04b8b1d5a0",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/pedidos?idCliente=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pedidos"
+              ],
+              "query": [
+                {
+                  "key": "idCliente",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4 - Adicionar Item ao Pedido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code é 200 (OK)\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var json = pm.response.json();",
+                  "pm.test(\"Total do pedido é maior que zero\", function () {",
+                  "    pm.expect(json.total).to.be.above(0);",
+                  "});",
+                  "",
+                  "pm.test(\"Status ainda é RASCUNHO\", function () {",
+                  "    pm.expect(json.status).to.eql(\"RASCUNHO\");",
+                  "});"
+                ],
+                "id": "022f9ea7-3c61-4388-a050-1280c31676e3"
+              }
+            }
+          ],
+          "id": "2013590b-434b-4fd8-b2de-b9ee553a0c96",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idProduto\": {{produtoId}},\n  \"quantidade\": 2\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/pedidos/{{pedidoId}}/itens",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pedidos",
+                "{{pedidoId}}",
+                "itens"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5 - Listar Todos os Pedidos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code é 200 (OK)\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var lista = pm.response.json();",
+                  "pm.test(\"Retornou pelo menos 1 pedido\", function () {",
+                  "    pm.expect(lista.length).to.be.above(0);",
+                  "});"
+                ],
+                "id": "c27a499b-c376-4888-9461-79a04b44d50d"
+              }
+            }
+          ],
+          "id": "209fd4fb-4f51-4ea8-ab7a-4e5e147564af",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/pedidos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pedidos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "6 - Listar Pedidos por Cliente (idCliente=1)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code é 200 (OK)\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var lista = pm.response.json();",
+                  "pm.test(\"Retornou uma lista (talvez vazia)\", function () {",
+                  "    pm.expect(lista).to.be.an('array');",
+                  "});"
+                ],
+                "id": "288211ee-44dd-478b-935b-da4e0ac3aa2f"
+              }
+            }
+          ],
+          "id": "2d188051-f7e2-418c-b164-4e4de1ada132",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/pedidos?idCliente=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pedidos"
+              ],
+              "query": [
+                {
+                  "key": "idCliente",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "7 - Buscar Pedido por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code é 200 (OK)\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var json = pm.response.json();",
+                  "pm.test(\"ID do pedido bate com o environment\", function () {",
+                  "    pm.expect(json.id).to.eql(parseInt(pm.environment.get(\"pedidoId\")));",
+                  "});"
+                ],
+                "id": "b7db2cfe-d8c4-4434-82dd-ae47d2fe4894"
+              }
+            }
+          ],
+          "id": "f0b7ae49-98ee-4a5c-8e04-78626a6ae6ad",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/pedidos/{{pedidoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pedidos",
+                "{{pedidoId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "8 - Cancelar Pedido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code é 200 (OK)\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var json = pm.response.json();",
+                  "pm.test(\"Status do pedido é CANCELADO\", function () {",
+                  "    pm.expect(json.status).to.eql(\"CANCELADO\");",
+                  "});"
+                ],
+                "id": "bb1fa42b-b706-464b-8601-01e119528266"
+              }
+            }
+          ],
+          "id": "d7906d73-dc14-43f9-9e5f-4095e15c5efb",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/pedidos/{{pedidoId}}/cancelar",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pedidos",
+                "{{pedidoId}}",
+                "cancelar"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "11 - Confirmar entrega do pedido",
+          "id": "32574417-5d51-49d1-9251-f8f0b3675ad4",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/pedidos/1/entregar",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pedidos",
+                "1",
+                "entregar"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "0bb4884e-074d-4321-b164-f7e794c0c098"
+    },
+    {
+      "name": "Usuarios",
+      "item": [
+        {
+          "name": "Criar usuário",
+          "id": "1eb00fb7-783b-45fd-8567-d86c0d6653ab",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Cliente Teste\",\n  \"email\": \"cliente.teste@sneaklab.com\",\n  \"passwordHash\": \"senha123\",\n  \"role\": \"CLIENTE\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "usuarios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar usuários",
+          "id": "59f4bba0-39fe-4051-9b3a-ec96a677965d",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "usuarios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar usuário por ID",
+          "id": "1aff0540-c27f-4cc2-a73b-be83f5328375",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "usuarios",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Atualizar usuário",
+          "id": "71781ee5-8276-48b4-abb4-b7171a53faf1",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Cliente Teste Atualizado\",\n  \"email\": \"cliente.teste@sneaklab.com\",\n  \"passwordHash\": \"novaSenha456\",\n  \"role\": \"CLIENTE\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "usuarios",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Deletar usuário",
+          "id": "e7788cb5-9eb2-494e-9225-fd1cdf09b492",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "usuarios",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "4234a484-52a7-4687-9f72-ee4430d04b51"
+    }
+  ],
+  "variable": [
+    {
+      "id": "3999b416-dd47-4d0c-ad65-84455d86c961",
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ]
+}
