@@ -97,10 +97,10 @@ Expondo API REST (camada HTTP):
 - `UsuarioController`
   - Base path: `/api/usuarios`
   - Endpoints:
-    - `POST /api/usuarios` – cria usuário
-    - `GET  /api/usuarios` – lista usuários
-    - `GET  /api/usuarios/{id}` – busca usuário por ID
-    - `PUT  /api/usuarios/{id}` – atualiza usuário
+    - `POST   /api/usuarios` – cria usuário
+    - `GET    /api/usuarios` – lista usuários
+    - `GET    /api/usuarios/{id}` – busca usuário por ID
+    - `PUT    /api/usuarios/{id}` – atualiza usuário
     - `DELETE /api/usuarios/{id}` – exclui usuário
 
 > Controllers de `Pedido` e `Pagamento` seguem o mesmo padrão (REST), respeitando as regras de negócio definidas nos services.
@@ -199,3 +199,65 @@ spring.jpa.properties.hibernate.format_sql=true
 
 spring.h2.console.enabled=true
 spring.h2.console.path=/h2-console
+
+------------------------------------------------------------------------
+## Dicas de Uso:
+
+Console H2 disponível em: http://localhost:8080/h2-console
+
+JDBC URL: jdbc:h2:mem:sneaklab
+
+Usuário: sa
+
+Senha: (em branco)
+
+-------------------------------------------------------------------------
+
+🧪 Testes via Postman
+
+No repositório existe o arquivo:
+
+Sneaklab API.postman_collection.json
+
+Esse arquivo contém o JSON da collection do Postman com as requisições prontas para testar a API (ex.: CRUD de usuários).
+
+Você pode:
+
+Importar diretamente no Postman, ou
+
+Abrir o arquivo e copiar o JSON para colar na opção de import por texto do Postman.
+
+
+🚀 Como importar a collection no Postman
+
+Abra o Postman.
+
+No canto superior esquerdo, clique em Import.
+
+Você tem duas opções:
+
+Opção A – Importar o arquivo diretamente
+
+1.Aba Files
+
+2.Clique em Upload Files
+
+3.Selecione o arquivo Sneaklab API.postman_collection.json
+
+4.Clique em Import
+
+Opção B – Colar o JSON manualmente
+
+1.Aba Raw text
+
+2.Abra o arquivo Sneaklab API.postman_collection.json em um editor de texto.
+
+3.Copie todo o conteúdo JSON.
+
+4.Cole na caixa de texto do Postman.
+
+5.Clique em Continue → Import.
+
+Após isso, aparecerá uma collection chamada algo como “Sneaklab API” na barra lateral do Postman.
+
+Após todas as configurações o projeto estará pronto para ser testado!
