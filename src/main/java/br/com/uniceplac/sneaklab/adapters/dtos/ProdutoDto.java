@@ -1,17 +1,19 @@
-package br.com.uniceplac.sneaklab.domain;
+package br.com.uniceplac.sneaklab.adapters.dtos;
 
-public class Produto {
+import br.com.uniceplac.sneaklab.domain.Produto;
+
+public class ProdutoDto {
+
     private long id;
     private String nome;
     private String sku;
     private Double preco;
     private int estoque;
 
-    //Construtores
-    public Produto() {
+    public ProdutoDto() {
     }
 
-    public Produto(long id, String nome, String sku, Double preco, int estoque) {
+    public ProdutoDto(long id, String nome, String sku, Double preco, int estoque) {
         this.id = id;
         this.nome = nome;
         this.sku = sku;
@@ -19,7 +21,25 @@ public class Produto {
         this.estoque = estoque;
     }
 
-    //Getters e Setters
+    public static ProdutoDto fromDomain(Produto produto) {
+        return new ProdutoDto(
+                produto.getId(),
+                produto.getNome(),
+                produto.getSku(),
+                produto.getPreco(),
+                produto.getEstoque()
+        );
+    }
+
+    public Produto toDomain() {
+        Produto produto = new Produto();
+        produto.setId(this.id);
+        produto.setNome(this.nome);
+        produto.setSku(this.sku);
+        produto.setPreco(this.preco);
+        produto.setEstoque(this.estoque);
+        return produto;
+    }
 
     public long getId() {
         return id;

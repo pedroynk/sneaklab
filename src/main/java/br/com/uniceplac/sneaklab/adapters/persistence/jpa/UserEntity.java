@@ -1,54 +1,60 @@
-package br.com.uniceplac.sneaklab.domain;
+package br.com.uniceplac.sneaklab.adapters.persistence.jpa;
+
+import br.com.uniceplac.sneaklab.domain.UserRole;
+import jakarta.persistence.*;
 
 import java.time.Instant;
 
-public class User {
+@Entity
+@Table(name = "users")
+public class UserEntity {
 
-    private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
     private String name;
+
+    @Column(nullable = false, unique = true)
     private String email;
+
+    // para simplificar, mesma coluna; depois você pode colocar hashing de fato
     private String passwordHash;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private UserRole role;
+
     private Instant createdAt;
     private Instant updatedAt;
 
-    public User() {
-        Instant now = Instant.now();
-        this.createdAt = now;
-        this.updatedAt = now;
+    public UserEntity() {
     }
 
-    public User(Long id,
-                String name,
-                String email,
-                String passwordHash,
-                UserRole role,
-                Instant createdAt,
-                Instant updatedAt) {
-        this.id = id;
+    public UserEntity(Long id,
+                      String name,
+                      String email,
+                      String passwordHash,
+                      UserRole role,
+                      Instant createdAt,
+                      Instant updatedAt) {
+        this.id = Math.toIntExact(id);
         this.name = name;
         this.email = email;
         this.passwordHash = passwordHash;
         this.role = role;
-        this.createdAt = createdAt != null ? createdAt : Instant.now();
-        this.updatedAt = updatedAt != null ? updatedAt : Instant.now();
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
-    public static User newUser(String name,
-                               String email,
-                               String passwordHash,
-                               UserRole role) {
-        Instant now = Instant.now();
-        return new User(null, name, email, passwordHash, role, now, now);
-    }
+    // Getters e Setters
 
-    // Getters / Setters
     public Long getId() {
-        return id;
+        return (long) id;
     }
 
     public void setId(Long id) {
-        this.id = id;
+        this.id = Math.toIntExact(id);
     }
 
     public String getName() {
@@ -83,19 +89,19 @@ public class User {
         this.role = role;
     }
 
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Instant updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
     public Instant getCreatedAt() {
         return createdAt;
     }
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

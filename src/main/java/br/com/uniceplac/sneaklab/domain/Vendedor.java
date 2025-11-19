@@ -1,18 +1,18 @@
 package br.com.uniceplac.sneaklab.domain;
 
 public class Vendedor {
-    private int idVendedor;
+    private long id;
     private String loja;
     private String cnpj;
     private double reputacao;
-    private int idUser;
+    private long idUser;
 
     //Construtores
     public Vendedor() {
     }
 
-    public Vendedor(int idVendedor, String loja, String cnpj, double reputacao, int idUser) {
-        this.idVendedor = idVendedor;
+    public Vendedor(long idVendedor, String loja, String cnpj, double reputacao, long idUser) {
+        this.id = idVendedor;
         this.loja = loja;
         this.cnpj = cnpj;
         this.reputacao = reputacao;
@@ -20,20 +20,12 @@ public class Vendedor {
     }
 
     //Getters e Setters
-    public int getIdUser() {
-        return idUser;
+    public long getId() {
+        return id;
     }
 
-    public void setIdUser(int idUser) {
-        this.idUser = idUser;
-    }
-
-    public int getIdVendedor() {
-        return idVendedor;
-    }
-
-    public void setIdVendedor(int idVendedor) {
-        this.idVendedor = idVendedor;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getLoja() {
@@ -58,5 +50,13 @@ public class Vendedor {
 
     public void setReputacao(double reputacao) {
         this.reputacao = reputacao;
+    }
+
+    public long getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(long idUser) {
+        this.idUser = idUser;
     }
 }

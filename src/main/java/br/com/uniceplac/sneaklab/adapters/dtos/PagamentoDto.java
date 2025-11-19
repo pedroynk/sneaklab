@@ -1,8 +1,13 @@
-package br.com.uniceplac.sneaklab.domain;
+package br.com.uniceplac.sneaklab.adapters.dtos;
+
+import br.com.uniceplac.sneaklab.domain.Pagamento;
+import br.com.uniceplac.sneaklab.domain.StatusPagamento;
+import br.com.uniceplac.sneaklab.domain.TipoPagamento;
 
 import java.util.Date;
 
-public class Pagamento {
+public class PagamentoDto {
+
     private long id;
     private long idPedido;
     private Date data;
@@ -10,11 +15,12 @@ public class Pagamento {
     private TipoPagamento tipo;
     private StatusPagamento status;
 
-    //Construtores
-    public Pagamento() {
+    // Construtores
+    public PagamentoDto() {
     }
 
-    public Pagamento(long id, long idPedido, Date data, double valor, TipoPagamento tipo, StatusPagamento status) {
+    public PagamentoDto(long id, long idPedido, Date data, double valor,
+                        TipoPagamento tipo, StatusPagamento status) {
         this.id = id;
         this.idPedido = idPedido;
         this.data = data;
@@ -23,8 +29,18 @@ public class Pagamento {
         this.status = status;
     }
 
-    //Getters e Setters
+    public static PagamentoDto fromDomain(Pagamento pagamento) {
+        return new PagamentoDto(
+                pagamento.getId(),
+                pagamento.getIdPedido(),
+                pagamento.getData(),
+                pagamento.getValor(),
+                pagamento.getTipo(),
+                pagamento.getStatus()
+        );
+    }
 
+    // Getters e Setters
     public long getId() {
         return id;
     }
@@ -57,19 +73,19 @@ public class Pagamento {
         this.valor = valor;
     }
 
-    public TipoPagamento getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(TipoPagamento tipo) {
-        this.tipo = tipo;
-    }
-
     public StatusPagamento getStatus() {
         return status;
     }
 
     public void setStatus(StatusPagamento status) {
         this.status = status;
+    }
+
+    public TipoPagamento getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(TipoPagamento tipo) {
+        this.tipo = tipo;
     }
 }

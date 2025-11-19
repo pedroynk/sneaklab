@@ -2,18 +2,18 @@ package br.com.uniceplac.sneaklab.domain;
 
 public class Cliente {
 
-    private int idCliente;
+    private long id;
     private String endereco;
     private String telefone;
     private String cpf;
-    private int idUser;
+    private long idUser;
 
     //Construtores
     public Cliente() {
     }
 
-    public Cliente(int idCliente, String endereco, String telefone, String cpf, int idUser) {
-        this.idCliente = idCliente;
+    public Cliente(long idCliente, String endereco, String telefone, String cpf, long idUser) {
+        this.id = idCliente;
         this.endereco = endereco;
         this.telefone = telefone;
         this.cpf = cpf;
@@ -21,20 +21,13 @@ public class Cliente {
     }
 
     //Getters e Setters
-    public int getIdUser() {
-        return idUser;
+
+    public long getId() {
+        return id;
     }
 
-    public void setIdUser(int idUser) {
-        this.idUser = idUser;
-    }
-
-    public int getIdCliente() {
-        return idCliente;
-    }
-
-    public void setIdCliente(int idCliente) {
-        this.idCliente = idCliente;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getEndereco() {
@@ -59,5 +52,13 @@ public class Cliente {
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
+    }
+
+    public long getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(long idUser) {
+        this.idUser = idUser;
     }
 }

@@ -1,17 +1,27 @@
-package br.com.uniceplac.sneaklab.domain;
+package br.com.uniceplac.sneaklab.adapters.persistence.jpa;
 
-public class Produto {
-    private long id;
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "produtos")
+public class ProdutoEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String nome;
-    private String sku;
-    private Double preco;
-    private int estoque;
 
-    //Construtores
-    public Produto() {
+    private String sku;
+
+    private Double preco;
+
+    private Integer estoque;
+
+    public ProdutoEntity() {
     }
 
-    public Produto(long id, String nome, String sku, Double preco, int estoque) {
+    public ProdutoEntity(Long id, String nome, String sku, Double preco, Integer estoque) {
         this.id = id;
         this.nome = nome;
         this.sku = sku;
@@ -19,13 +29,11 @@ public class Produto {
         this.estoque = estoque;
     }
 
-    //Getters e Setters
-
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -53,11 +61,11 @@ public class Produto {
         this.preco = preco;
     }
 
-    public int getEstoque() {
+    public Integer getEstoque() {
         return estoque;
     }
 
-    public void setEstoque(int estoque) {
+    public void setEstoque(Integer estoque) {
         this.estoque = estoque;
     }
 }

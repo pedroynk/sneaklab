@@ -1,20 +1,43 @@
-package br.com.uniceplac.sneaklab.domain;
+package br.com.uniceplac.sneaklab.adapters.persistence.jpa;
+
+import br.com.uniceplac.sneaklab.domain.StatusPagamento;
+import br.com.uniceplac.sneaklab.domain.TipoPagamento;
+import jakarta.persistence.*;
 
 import java.util.Date;
 
-public class Pagamento {
-    private long id;
-    private long idPedido;
+@Entity
+@Table(name = "pagamentos")
+public class PagamentoEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "id_pedido", nullable = false)
+    private int idPedido;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false)
     private Date data;
+
+    @Column(nullable = false)
     private double valor;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TipoPagamento tipo;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private StatusPagamento status;
 
     //Construtores
-    public Pagamento() {
+    public PagamentoEntity() {
     }
 
-    public Pagamento(long id, long idPedido, Date data, double valor, TipoPagamento tipo, StatusPagamento status) {
+    public PagamentoEntity(Long id, int idPedido, Date data, double valor,
+                           TipoPagamento tipo, StatusPagamento status) {
         this.id = id;
         this.idPedido = idPedido;
         this.data = data;
@@ -23,21 +46,21 @@ public class Pagamento {
         this.status = status;
     }
 
-    //Getters e Setters
+    // Getters e Setters
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public long getIdPedido() {
+    public int getIdPedido() {
         return idPedido;
     }
 
-    public void setIdPedido(long idPedido) {
+    public void setIdPedido(int idPedido) {
         this.idPedido = idPedido;
     }
 

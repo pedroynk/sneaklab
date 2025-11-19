@@ -1,9 +1,9 @@
 package br.com.uniceplac.sneaklab.domain;
 
 public class ItemPedido {
-    private int id;
-    private int idPedido;
-    private int idProduto;
+    private long id;
+    private long idPedido;
+    private long idProduto;
     private int quantidade;
     private double precounit;
     private double subtotal;
@@ -12,7 +12,7 @@ public class ItemPedido {
     public ItemPedido() {
     }
 
-    public ItemPedido(int id, int idPedido, int idProduto, int quantidade, double precounit, double subtotal) {
+    public ItemPedido(long id, long idPedido, long idProduto, int quantidade, double precounit, double subtotal) {
         this.id = id;
         this.idPedido = idPedido;
         this.idProduto = idProduto;
@@ -22,28 +22,21 @@ public class ItemPedido {
     }
 
     //Getters e Setters
-    public int getId() {
+
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public int getIdPedido() {
+    public long getIdPedido() {
         return idPedido;
     }
 
-    public void setIdPedido(int idPedido) {
+    public void setIdPedido(long idPedido) {
         this.idPedido = idPedido;
-    }
-
-    public int getIdProduto() {
-        return idProduto;
-    }
-
-    public void setIdProduto(int idProduto) {
-        this.idProduto = idProduto;
     }
 
     public int getQuantidade() {
@@ -52,6 +45,14 @@ public class ItemPedido {
 
     public void setQuantidade(int quantidade) {
         this.quantidade = quantidade;
+    }
+
+    public long getIdProduto() {
+        return idProduto;
+    }
+
+    public void setIdProduto(long idProduto) {
+        this.idProduto = idProduto;
     }
 
     public double getPrecounit() {

@@ -1,19 +1,33 @@
-package br.com.uniceplac.sneaklab.domain;
+package br.com.uniceplac.sneaklab.adapters.persistence.jpa;
+
+import br.com.uniceplac.sneaklab.domain.StatusPedido;
+import jakarta.persistence.*;
 
 import java.util.Date;
 
-public class Pedido {
-    private long id;
+@Entity
+@Table(name = "pedidos")
+public class PedidoEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "id_cliente", nullable = false)
     private long idCliente;
+
+    @Temporal(TemporalType.TIMESTAMP)
     private Date data;
+
     private double total;
+
+    @Enumerated(EnumType.STRING)
     private StatusPedido status;
 
-    //Construtores
-    public Pedido() {
+    public PedidoEntity() {
     }
 
-    public Pedido(long id, long idCliente, Date data, double total, StatusPedido status) {
+    public PedidoEntity(Long id, long idCliente, Date data, double total, StatusPedido status) {
         this.id = id;
         this.idCliente = idCliente;
         this.data = data;
@@ -21,13 +35,11 @@ public class Pedido {
         this.status = status;
     }
 
-    //Getters e Setters
-
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
