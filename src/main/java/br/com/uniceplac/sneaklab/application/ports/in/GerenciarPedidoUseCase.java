@@ -6,19 +6,19 @@ import java.util.List;
 
 public interface GerenciarPedidoUseCase {
 
-    Pedido criarPedido(long idCliente);
+    Pedido criarPedido(int idCliente);
 
-    Pedido adicionarItem(long idPedido, long idProduto, int quantidade);
+    Pedido adicionarItem(int idPedido, int idProduto, int quantidade);
 
     List<Pedido> listarPedidos();
 
-    List<Pedido> listarPedidosPorCliente(long idCliente);
+    List<Pedido> listarPedidosPorCliente(int idCliente);
 
-    Pedido buscarPorId(long id);
+    Pedido buscarPorId(int id);
 
-    Pedido enviarPedido(long id);
+    Pedido enviarPedido(int id);
 
-    Pedido confirmarEntrega(long id);
+    Pedido confirmarEntrega(int id);
 
-    Pedido cancelarPedido(long id);
+    Pedido cancelarPedido(int id);
 }

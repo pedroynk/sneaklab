@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PedidoService implements GerenciarPedidoUseCase {
@@ -26,24 +27,79 @@ public class PedidoService implements GerenciarPedidoUseCase {
         this.notificationService = notificationService;
     }
 
+    // ================== MÉTODOS DA INTERFACE ==================
+
     @Override
-    public Pedido criar(Pedido pedido) {
-        if (pedido.getData() == null) {
-            pedido.setData(new Date());
-        }
-        if (pedido.getStatus() == null) {
-            pedido.setStatus(StatusPedido.RASCUNHO);
-        }
+    public Pedido criarPedido(int idCliente) {
+        Pedido pedido = new Pedido();
+        pedido.setIdCliente(idCliente);
+        pedido.setData(new Date());
+        pedido.setStatus(StatusPedido.RASCUNHO);
+        pedido.setTotal(0.0);
 
         Pedido salvo = pedidoRepositoryPort.salvar(pedido);
-
-        // notifica status inicial do pedido (RASCUNHO)
         notificarStatusPedidoParaCliente(salvo);
-
         return salvo;
     }
 
     @Override
+    public Pedido adicionarItem(int idPedido, int idProduto, int quantidade) {
+        // Por enquanto, só garante que o pedido existe.
+        // Depois você pode integrar com ProdutoService + ItemPedidoRepositoryPort
+        // para:
+        //  - buscar preço do produto
+        //  - criar ItemPedido
+        //  - atualizar total do pedido
+        Pedido pedido = buscarPorId(idPedido);
+
+        // TODO: implementar regra de adicionar item ao pedido e recalcular total
+
+        // Após atualizar o pedido no banco, notificar o cliente (se fizer sentido)
+        notificarStatusPedidoParaCliente(pedido);
+        return pedido;
+    }
+
+    @Override
+    public List<Pedido> listarPedidos() {
+        return pedidoRepositoryPort.listarTodos();
+    }
+
+    @Override
+    public List<Pedido> listarPedidosPorCliente(int idCliente) {
+        // Implementação em memória (sem exigir novo método no repositório)
+        return pedidoRepositoryPort.listarTodos()
+                .stream()
+                .filter(p -> p.getIdCliente() == idCliente)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Pedido buscarPorId(int id) {
+        return pedidoRepositoryPort.buscarPorId(id)
+                .orElseThrow(() -> new IllegalArgumentException("Pedido não encontrado. Id = " + id));
+    }
+
+    @Override
+    public Pedido enviarPedido(int id) {
+        return atualizarStatus(id, StatusPedido.ENVIADO);
+    }
+
+    @Override
+    public Pedido confirmarEntrega(int id) {
+        return atualizarStatus(id, StatusPedido.ENTREGUE);
+    }
+
+    @Override
+    public Pedido cancelarPedido(int id) {
+        return cancelar(id);
+    }
+
+    // ================== MÉTODOS AUXILIARES DE REGRA ==================
+
+    /**
+     * Atualiza campos genéricos de um pedido já existente.
+     * Útil se você tiver um use case de atualização "full" depois.
+     */
     public Pedido atualizar(Pedido pedidoAtualizado) {
         Pedido existente = buscarPorId((int) pedidoAtualizado.getId());
 
@@ -59,23 +115,21 @@ public class PedidoService implements GerenciarPedidoUseCase {
         }
 
         Pedido salvo = pedidoRepositoryPort.salvar(existente);
-
-        // sempre que atualizar, podemos notificar status (principalmente se mudou)
         notificarStatusPedidoParaCliente(salvo);
-
         return salvo;
     }
 
-    @Override
-    public Pedido atualizarStatus(int idPedido, StatusPedido novoStatus) {
+    /**
+     * Regra central para mudança de status.
+     */
+    private Pedido atualizarStatus(int idPedido, StatusPedido novoStatus) {
         Pedido pedido = buscarPorId(idPedido);
 
         if (pedido.getStatus() == novoStatus) {
-            return pedido; // idempotente
+            // idempotente
+            return pedido;
         }
 
-        // Regras básicas de transição – adapta conforme seu diagrama de estados
-        // Ex.: não ir de CANCELADO pra ENVIADO, etc.
         if (pedido.getStatus() == StatusPedido.CANCELADO) {
             throw new IllegalArgumentException(
                     "Não é possível alterar o status de um pedido já cancelado."
@@ -86,38 +140,28 @@ public class PedidoService implements GerenciarPedidoUseCase {
         Pedido salvo = pedidoRepositoryPort.salvar(pedido);
 
         notificarStatusPedidoParaCliente(salvo);
-
         return salvo;
     }
 
-    @Override
-    public Pedido cancelar(int idPedido) {
+    /**
+     * Regra de cancelamento.
+     */
+    private Pedido cancelar(int idPedido) {
         Pedido pedido = buscarPorId(idPedido);
 
         if (pedido.getStatus() == StatusPedido.CANCELADO) {
-            return pedido; // idempotente
+            // idempotente
+            return pedido;
         }
 
         pedido.setStatus(StatusPedido.CANCELADO);
         Pedido salvo = pedidoRepositoryPort.salvar(pedido);
 
         notificarStatusPedidoParaCliente(salvo);
-
         return salvo;
     }
 
-    @Override
-    public Pedido buscarPorId(int id) {
-        return pedidoRepositoryPort.buscarPorId(id)
-                .orElseThrow(() -> new IllegalArgumentException("Pedido não encontrado. Id = " + id));
-    }
-
-    @Override
-    public List<Pedido> listar() {
-        return pedidoRepositoryPort.listarTodos();
-    }
-
-    // ---------------------- métodos auxiliares ----------------------
+    // ================== NOTIFICAÇÃO ==================
 
     private void notificarStatusPedidoParaCliente(Pedido pedido) {
         String email = buscarEmailDoCliente(pedido);
@@ -128,11 +172,10 @@ public class PedidoService implements GerenciarPedidoUseCase {
     }
 
     /**
-     * SUPOSIÇÃO: Pedido possui um campo idCliente (int) que mapeia para User.id.
-     * Se você já alterou o domínio para usar userId (Long), troque aqui.
+     * SUPOSIÇÃO: Pedido possui um campo int idCliente que mapeia para User.id (Long).
      */
     private String buscarEmailDoCliente(Pedido pedido) {
-        int idCliente = (int) pedido.getIdCliente(); // ajuste se tiver outro campo
+        int idCliente = (int) pedido.getIdCliente();
         return userRepositoryPort.buscarPorId((long) idCliente)
                 .map(User::getEmail)
                 .orElse(null);

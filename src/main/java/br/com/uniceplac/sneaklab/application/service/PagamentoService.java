@@ -28,8 +28,8 @@ public class PagamentoService implements GerenciarPagamentoUseCase {
     }
 
     @Override
-    public Pagamento registrarPagamento(int idPedido, double valor, TipoPagamento tipoPagamento) {
-        Pedido pedido = pedidoRepositoryPort.buscarPorId(idPedido)
+    public Pagamento registrarPagamento(long idPedido, double valor, TipoPagamento tipoPagamento) {
+        Pedido pedido = pedidoRepositoryPort.buscarPorId((int) idPedido)
                 .orElseThrow(() -> new IllegalArgumentException("Pedido não encontrado: id=" + idPedido));
 
         if (pedido.getStatus() == StatusPedido.CANCELADO) {
@@ -66,8 +66,8 @@ public class PagamentoService implements GerenciarPagamentoUseCase {
     }
 
     @Override
-    public Pagamento aprovarPagamento(int idPagamento) {
-        Pagamento pagamento = pagamentoRepositoryPort.buscarPorId(idPagamento)
+    public Pagamento aprovarPagamento(long idPagamento) {
+        Pagamento pagamento = pagamentoRepositoryPort.buscarPorId((int) idPagamento)
                 .orElseThrow(() -> new IllegalArgumentException("Pagamento não encontrado: id=" + idPagamento));
 
         if (pagamento.getStatus() == StatusPagamento.ESTORNADO) {
@@ -106,8 +106,8 @@ public class PagamentoService implements GerenciarPagamentoUseCase {
     }
 
     @Override
-    public Pagamento estornarPagamento(int idPagamento) {
-        Pagamento pagamento = pagamentoRepositoryPort.buscarPorId(idPagamento)
+    public Pagamento estornarPagamento(long idPagamento) {
+        Pagamento pagamento = pagamentoRepositoryPort.buscarPorId((int) idPagamento)
                 .orElseThrow(() -> new IllegalArgumentException("Pagamento não encontrado: id=" + idPagamento));
 
         if (pagamento.getStatus() == StatusPagamento.ESTORNADO) {
@@ -140,15 +140,15 @@ public class PagamentoService implements GerenciarPagamentoUseCase {
     }
 
     @Override
-    public Pagamento buscarPorId(int idPagamento) {
-        return pagamentoRepositoryPort.buscarPorId(idPagamento)
+    public Pagamento buscarPorId(long idPagamento) {
+        return pagamentoRepositoryPort.buscarPorId((int) idPagamento)
                 .orElseThrow(() -> new IllegalArgumentException("Pagamento não encontrado: id=" + idPagamento));
     }
 
 
     @Override
-    public List<Pagamento> listarPorPedido(int idPedido) {
-        return pagamentoRepositoryPort.listarPorPedido(idPedido);
+    public List<Pagamento> listarPorPedido(long idPedido) {
+        return pagamentoRepositoryPort.listarPorPedido((int) idPedido);
     }
     private String buscarEmailDoCliente(Pedido pedido) {
         try {
