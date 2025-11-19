@@ -200,64 +200,48 @@ spring.jpa.properties.hibernate.format_sql=true
 spring.h2.console.enabled=true
 spring.h2.console.path=/h2-console
 
-------------------------------------------------------------------------
-## Dicas de Uso:
+📘 Dicas de Uso
+🔹 Console H2
 
-Console H2 disponível em: http://localhost:8080/h2-console
+Console H2 disponível em:
+http://localhost:8080/h2-console
 
-JDBC URL: jdbc:h2:mem:sneaklab
+JDBC URL:
+jdbc:h2:mem:sneaklab
 
-Usuário: sa
+Usuário:
+sa
 
-Senha: (em branco)
-
--------------------------------------------------------------------------
+Senha:
+(em branco)
 
 🧪 Testes via Postman
 
-No repositório existe o arquivo:
-
+Arquivo disponível:
 Sneaklab API.postman_collection.json
 
-Esse arquivo contém o JSON da collection do Postman com as requisições prontas para testar a API (ex.: CRUD de usuários).
+🚀 Como importar no Postman
 
-Você pode:
+Abra o Postman
 
-Importar diretamente no Postman, ou
+Clique em Import
 
-Abrir o arquivo e copiar o JSON para colar na opção de import por texto do Postman.
+Opção A — Arquivo
 
+Aba Files
 
-🚀 Como importar a collection no Postman
+Upload Files
 
-Abra o Postman.
+Selecione Sneaklab API.postman_collection.json
 
-No canto superior esquerdo, clique em Import.
+Import
 
-Você tem duas opções:
+Opção B — Texto
 
-Opção A – Importar o arquivo diretamente
+Aba Raw text
 
-1.Aba Files
+Copie o JSON completo
 
-2.Clique em Upload Files
+Cole na caixa
 
-3.Selecione o arquivo Sneaklab API.postman_collection.json
-
-4.Clique em Import
-
-Opção B – Colar o JSON manualmente
-
-1.Aba Raw text
-
-2.Abra o arquivo Sneaklab API.postman_collection.json em um editor de texto.
-
-3.Copie todo o conteúdo JSON.
-
-4.Cole na caixa de texto do Postman.
-
-5.Clique em Continue → Import.
-
-Após isso, aparecerá uma collection chamada algo como “Sneaklab API” na barra lateral do Postman.
-
-Após todas as configurações o projeto estará pronto para ser testado!
+Continue → Import
