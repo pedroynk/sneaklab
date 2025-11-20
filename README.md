@@ -199,8 +199,9 @@ spring.jpa.properties.hibernate.format_sql=true
 
 spring.h2.console.enabled=true
 spring.h2.console.path=/h2-console
+```
 
-📘 Dicas de Uso
+## 📘 Dicas de Uso
 🔹 Console H2
 
 Console H2 disponível em:
